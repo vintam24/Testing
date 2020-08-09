@@ -30,9 +30,10 @@
 									</thead>
 									<tbody>
 									<?php foreach($order_reports as $k => $order_report):?>
+										<?php foreach($order_report as $k2 => $order_report2):?>
 										<tr class="item_tr" style="background-color:#fff;">
 											<td><span class="row-details row-details-close"></span></td>
-											<td colspan="2"><?php echo $k?></td>
+											<td colspan="2"><?php echo $k2?></td>
 										</tr>
 										<tr class="hide">
 											<td></td>
@@ -45,16 +46,19 @@
 														</tr>
 													</thead>
 													<tbody>
-													<?php foreach($order_report as $q => $val):?>
-														<tr>
-															<td style="border-left:none;width:50%"><?php echo $q?></td>
-															<td><?php echo $val?></td>
-														</tr>
+													<?php foreach($order_report2 as $q => $val):?>
+														<?php foreach($val as $q2 => $val2):?>
+															<tr>
+																<td style="border-left:none;width:50%"><?php echo key($val)?></td>
+																<td><?php echo $val2?></td>
+															</tr>
+														<?php endforeach;?>
 													<?php endforeach;?>
 													</tbody>
 												</table>
 											</td>
 										</tr>
+										<?php endforeach;?>
 									<?php endforeach;?>
 									</tbody>
 								</table>
