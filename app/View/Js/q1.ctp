@@ -21,7 +21,7 @@ Question: Advanced Input Field</div>
 <button class="close" data-dismiss="alert"></button>
 The table you start with</div>
 
-<table class="table table-striped table-bordered table-hover">
+<table id="tab_id" class="table table-striped table-bordered table-hover">
 <thead>
 <th><span id="add_item_button" class="btn mini green addbutton" onclick="addToObj=false">
 											<i class="icon-plus"></i></span></th>
@@ -30,14 +30,19 @@ The table you start with</div>
 <th>Unit Price</th>
 </thead>
 
-<tbody>
-	<tr>
-	<td></td>
-	<td><textarea name="data[1][description]" class="m-wrap  description required" rows="2" ></textarea></td>
-	<td><input name="data[1][quantity]" class=""></td>
-	<td><input name="data[1][unit_price]"  class=""></td>
-	
-</tr>
+<tbody id="table_body">
+	<tr style="height: 30px">
+		<td></td>
+		<td class="txt editMe">
+			<!-- <textarea name="data[1][description]" class="m-wrap txt description required" rows="2"></textarea> -->
+		</td>
+		<td class="qty editMe2">
+			<!-- <input name="data[1][quantity]" class="qty"> -->
+		</td>
+		<td class="prc editMe3">
+			<!-- <input name="data[1][unit_price]"  class="prc"> -->
+		</td>
+	</tr>
 
 </tbody>
 
@@ -61,18 +66,61 @@ Your browser does not support the video tag.
 
 
 <?php $this->start('script_own');?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://raw.githack.com/unwild/SimpleTableCellEditor/master/SimpleTableCellEditor.es6.min.js"></script>
 <script>
-$(document).ready(function(){
-
+	var val = 1;
 	$("#add_item_button").click(function(){
-
-
-		alert("suppose to add a new row");
+		val++;
+		$("#table_body").append(`
+		<tr style="height: 30px">
+			<td></td>
+			<td class="txt editMe">
+			</td>
+			<td class="qty editMe2">
+			</td>
+			<td class="prc editMe3">
+			</td>
+		</tr>
+		`);
 		
 
-		});
+	});
+	var simpleEditor = new SimpleTableCellEditor("tab_id");
+	simpleEditor.SetEditableClass("editMe", {
+		internals: {
+			renderEditor: (elem, oldVal) => {
+				$(elem).html(`<textarea id="txt`+val+`" name="data[`+val+`][description]" class="m-wrap editMe txt description required" rows="2">`+oldVal+`</textarea>`);
 
-	
+				$("textarea option").filter(function () {
+					return $(this).val() == oldVal;
+				}).prop('selected', true);
+			
+			},
+			extractEditorValue: (elem) => { return $(elem).find('textarea').val(); },
+		}
+	});
+	simpleEditor.SetEditableClass("editMe2", {
+		internals: {
+			renderEditor: (elem, oldVal) => {
+				$(elem).html(`<input id="qty'+val+'" name="data[`+val+`][quantity]" class="editMe2" value="`+oldVal+`"></input>`);
+			},
+		}
+	});
+	simpleEditor.SetEditableClass("editMe3", {
+		internals: {
+			renderEditor: (elem, oldVal) => {
+				$(elem).html(`<input id="qty`+val+`" name="data[`+val+`][quantity]" class="editMe3" value="`+oldVal+`"></input>`);
+			
+			},
+		}
+	});
+
+	$('#simpleEditableTable').on("cell:edited", function (event) {
+		console.log(`'${event.oldValue}' changed to '${event.newValue}'`);
+	});
+$(document).ready(function(){
+
 });
 </script>
 <?php $this->end();?>
